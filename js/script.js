@@ -1,20 +1,34 @@
 const selectMonster = document.getElementById('js-monster');
 const ignore = document.getElementById('js-my-ignore-guard');
 const viewDamage = document.getElementById('js-damage');
+const copyUrl = document.getElementById('js-copy-url')
 
-
-if(Cookies.get('ignore') !== undefined){
-    ignore.value = Cookies.get('ignore');    
+if (Cookies.get('ignore') !== undefined) {
+    ignore.value = Cookies.get('ignore');
 }
 
-function calc(){
+copyUrl.addEventListener('click', function () {
+    let e = document.createElement('textarea');
+    ((d) => {
+        e.textContent = d.title + ' ' + d.URL;
+        d.body.appendChild(e);
+        e.select();
+        d.execCommand('copy');
+        d.body.removeChild(e);
+    })(document);
+    copyUrl.textContent = "コピーしました"
+
+});
+
+
+function calc() {
     // 防御率無視が100を超過
-    if(ignore.value > 100){
+    if (ignore.value > 100) {
         ignore.value = 100;
         return;
     }
     // モブが選択されていない
-    if(selectMonster.value == ""){
+    if (selectMonster.value == "") {
         return;
     }
 
@@ -23,7 +37,7 @@ function calc(){
     let damage = 1 - selectMonster.value * (1 - (ignore.value / 100));
 
     // 計算結果がマイナス
-    if(damage * 100 < 0){
+    if (damage * 100 < 0) {
         damage = 0;
     }
 
@@ -34,9 +48,9 @@ function calc(){
 }
 
 calc(selectMonster)
-ignore.onchange = function(){
+ignore.onchange = function () {
     calc(selectMonster);
 }
-selectMonster.onchange = function(){
+selectMonster.onchange = function () {
     calc(selectMonster);
 }
