@@ -1,6 +1,11 @@
 const selectMonster = document.getElementById('js-monster');
-const ignore = document.getElementById('js-my-damage-cut-ignore');
+const ignore = document.getElementById('js-my-ignore-guard');
 const viewDamage = document.getElementById('js-damage');
+
+
+if(Cookies.get('ignore') !== undefined){
+    ignore.value = Cookies.get('ignore');    
+}
 
 function calc(){
     // 防御率無視が100を超過
@@ -10,8 +15,6 @@ function calc(){
     }
     // モブが選択されていない
     if(selectMonster.value == ""){
-        document.createElement('p');
-
         return;
     }
 
@@ -23,6 +26,8 @@ function calc(){
     if(damage * 100 < 0){
         damage = 0;
     }
+
+    Cookies.set('ignore', ignore.value);
 
     // 計算結果を出力
     viewDamage.textContent = Math.ceil(damage * 100);

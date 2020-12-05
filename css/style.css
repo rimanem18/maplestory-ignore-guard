@@ -1,8 +1,37 @@
 @charset "UTF-8";
 
+.wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.title {
+    background: #e6c477;
+    color: #f2f2f2;
+    position: relative;
+    padding: 0.5em;
+}
+.subtitle {
+    background: #c1170c;
+    position: absolute;
+    top: -1em;
+    left: -0.5em;
+    padding: 0.1em;
+    font-size: 60%;
+}
+.subtitle::after {
+    position: absolute;
+    top: 32px;
+    left: 0px;
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 10px 10px 0;
+    border-color: transparent #c1170c transparent transparent;
+}
 .note {
     font-size: 80%;
 }
-.damage-cut-igrone {
+.ignore-guard {
     width: 3em;
 }

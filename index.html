@@ -5,34 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MapleStory 防御率無簡易視計算ツール</title>
     <link rel="stylesheet" href="css/style.css">
+    <script defer src="js/libs/js-cookie.js"></script>
     <script defer src="./js/script.js"></script>
 </head>
 <body>
-    <h1 class="h1">MapleStory 防御率無視簡易計算ツール</h1>
-    <form action="" name="damage-cut">
-        <p>
-            自分の防御率無視:<input type="number" name="js-my-damage-cut-
-            ignore" id="js-my-damage-cut-ignore" class="damage-cut-igrone" value="100" maxlength="3"> %    
+    <div class="wrapper">
+        <h1 class="title">
+            <div class="subtitle">MapleStory</div>
+            防御率無視簡易計算ツール
+        </h1>
+        <form action="" name="guard">
+            <p>
+                自分の防御率無視:<input type="number" name="js-my-guard-
+                ignore" id="js-my-ignore-guard" class="ignore-guard" value="100" maxlength="3"> %    
+            </p>
+            <select id="js-monster" name="monster">
+                <option value="3">防御率300%のMOB</option>
+                <option value="1.8">カオスピンクビーン(180%)</option>
+                <option value="1.6">カオスピンクビーンの石像(160%)</option>
+                <option value="1.2">カオスブラッディクイーン(120%)</option>
+                <option value="1.2">ハードマグナス(120%)</option>
+                <option value="1">カオスバンバン(100%)</option>
+                <option value="1">カオスジャクム(100%)</option>
+                <option value="1">ノーマルシグナス(100%)</option>
+                <option value="0.9">アカイラム(90%)</option>
+                <option value="0.8">カオスピエール(80%)</option>
+                <option value="0.55">モリランマル(55%)</option>
+                <option value="0.5">ノーマルマグナス(50%)</option>
+                <option value="0.25">カオスホーンテイル(25%)</option>
+            </select>
+            <span>に対して通るダメージは <span id="js-damage"></span> % です。</span>
+        </form>
+        <p class="note">
+            通るダメージは切り上げで計算しており、実際のダメージと異なる場合があります。<br>
+            このツールは MapleStory プレイヤーのひとりに過ぎない一個人が開発したものです。<br>
+            利用によって何かしらの損害が生じても、いかなる責任も負いません。<br>
         </p>
-        <select id="js-monster" name="monster">
-            <option value="3">防御率300%のMOB</option>
-            <option value="1.8">カオスピンクビーン(180%)</option>
-            <option value="1.6">カオスピンクビーンの石像(160%)</option>
-            <option value="1.2">カオスブラッティクイーン(120%)</option>
-            <option value="1.2">ハードマグナス(120%)</option>
-            <option value="1">カオスバンバン(100%)</option>
-            <option value="1">ノーマルシグナス(100%)</option>
-            <option value="0.9">アカイラム(90%)</option>
-            <option value="0.8">カオスピエール(80%)</option>
-            <option value="0.55">モリランマル(55%)</option>
-            <option value="0.5">ノーマルマグナス(50%)</option>
-            <option value="0.25">カオスホーンテイル(25%)</option>
-        </select>
-        <span>に対して通るダメージは <span id="js-damage"></span> % です。</span>
-    </form>
-    <p class="note">通るダメージは切り上げで計算しており、実際のダメージと異なる場合があります。</p>
-    <footer class="footer">
-        <small>© 2020 MapleStory 防御率無視簡易計算ツール produced by Rimane</small>
-    </footer>
+        <footer class="footer">
+            <p>
+                製作者への<a href="https://rimane.net/contact/">お問い合わせ</a>
+            </p>
+            <small>© 2020 MapleStory 防御率無視簡易計算ツール produced by Rimane</small>
+        </footer>    
+    </div>
 </body>
 </html>
