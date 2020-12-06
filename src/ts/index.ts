@@ -1,14 +1,37 @@
-const selectMonster = document.getElementById('js-monster');
-const ignore = document.getElementById('js-my-ignore-guard');
+const Cookies = require('js-cookie');
+
+const selectMonster :HTMLInputElement =<HTMLInputElement>document.getElementById('js-monster');
+const ignore: HTMLInputElement =<HTMLInputElement>document.getElementById('js-my-ignore-guard');
 const viewDamage = document.getElementById('js-damage');
 const copyUrl = document.getElementById('js-copy-url')
-const pressure = document.getElementById('js-pressure')
-const pressureEnhance = document.getElementById('js-pressure-enhance')
-const coreUpgrade = document.getElementById('js-core-upgrade')
+const pressure: HTMLInputElement =<HTMLInputElement>document.getElementById('js-pressure')
+const pressureEnhance: HTMLInputElement =<HTMLInputElement>document.getElementById('js-pressure-enhance')
+const coreUpgrade :HTMLInputElement =<HTMLInputElement>document.getElementById('js-core-upgrade')
 
+let cookiesList = [
+    ["coreUpgrade", coreUpgrade],
+    ["pressure", pressure],
+    ['pressureEnhunce', pressureEnhance],
+];
 
+// クッキーのイニシャライズ
 if (Cookies.get('ignore') !== undefined) {
     ignore.value = Cookies.get('ignore');
+}
+cookiesList.forEach(element => {
+    if (Cookies.get(element[0]) !== undefined) {
+        element[1].checked = toBoolean(Cookies.get(element[0]));
+    }        
+});
+
+
+// 文字列の真偽値を boolean 型に変換
+function toBoolean(strBool) {
+    if (strBool === "false") {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 copyUrl.addEventListener('click', function () {
@@ -36,7 +59,7 @@ function calc() {
         return;
     }
 
-    
+
 
     // 防御率無視の計算式
     // 通るダメージ(％)＝1－敵の防御率×(1－防御率無視)
@@ -44,8 +67,8 @@ function calc() {
     let pressureIgnore = 1;
     let coreIgnore = 1;
 
-    if(pressure.checked === true){
-        if(pressureEnhance.checked === true){
+    if (pressure.checked === true) {
+        if (pressureEnhance.checked === true) {
             pressureIgnore = 1 - 0.5;
         } else {
             pressureIgnore = 1 - 0.3;
@@ -57,8 +80,7 @@ function calc() {
         pressureEnhance.disabled = true;
     }
 
-
-    if(coreUpgrade.checked === true){
+    if (coreUpgrade.checked === true) {
         coreIgnore = 1 - 0.2;
     }
     damage = 1 - selectMonster.value * (1 - (ignore.value / 100)) * pressureIgnore * coreIgnore;
@@ -68,7 +90,11 @@ function calc() {
         damage = 0;
     }
 
+    // クッキーの再セット
     Cookies.set('ignore', ignore.value, { expires: 7 });
+    cookiesList.forEach(element => {       
+        Cookies.set(element[0], element[1].checked, { expires: 7 });
+    });
 
     // 計算結果を出力
     viewDamage.textContent = Math.ceil(damage * 100);
@@ -78,7 +104,7 @@ calc(selectMonster);
 
 array = [ignore, selectMonster, pressure, pressureEnhance, coreUpgrade];
 array.forEach(element => {
-    element.addEventListener('change', function(){
+    element.addEventListener('change', function () {
         calc(selectMonster);
     })
 });
