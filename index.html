@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
     <meta property="og:url" content="https://app.rimane.net/maplestory/ignore-guard/" />
     <meta property="og:type" content="applicaiton" />
     <meta property="og:title" content="MapleStory 防御率無視簡易計算ツール" />
-    <meta property="og:description" content="MapleStoryの防御率無視の効果を可視化するための計算ツール" />  
+    <meta property="og:description" content="MapleStoryの防御率無視の効果を可視化するための計算ツール" />
     <meta property="og:site_name" content="MapleStory 防御率無視簡易計算ツール" />
     <meta property="og:image" content="https://app.rimane.net/maplestory/ignore-guard/img/ogp.png">
 
@@ -28,34 +29,47 @@
     <script defer src="js/libs/js-cookie.js"></script>
     <script defer src="./js/script.js"></script>
 </head>
+
 <body>
     <div class="wrapper">
         <h1 class="title">
             <div class="subtitle">MapleStory</div>
             防御率無視簡易計算ツール
         </h1>
-        <form action="" name="guard">
-            <p>
-                自分の防御率無視:<input type="number" name="js-my-guard-
-                ignore" id="js-my-ignore-guard" class="ignore-guard" value="100" maxlength="3"> %    
-            </p>
-            <select id="js-monster" name="monster">
-                <option value="3">防御率300%のMOB</option>
-                <option value="1.8">カオスピンクビーン(180%)</option>
-                <option value="1.6">カオスピンクビーンの石像(160%)</option>
-                <option value="1.2">カオスブラッディクイーン(120%)</option>
-                <option value="1.2">ハードマグナス(120%)</option>
-                <option value="1">カオスバンバン(100%)</option>
-                <option value="1">カオスジャクム(100%)</option>
-                <option value="1">ノーマルシグナス(100%)</option>
-                <option value="0.9">アカイラム(90%)</option>
-                <option value="0.8">カオスピエール(80%)</option>
-                <option value="0.55">モリランマル(55%)</option>
-                <option value="0.5">ノーマルマグナス(50%)</option>
-                <option value="0.25">カオスホーンテイル(25%)</option>
-            </select>
-            <span>に対して通るダメージは <span id="js-damage"></span> % です。</span>
-        </form>
+        <p>
+            自分の防御率無視:<input type="number" name="js-my-guard-
+                ignore" id="js-my-ignore-guard" class="ignore-guard" value="100" maxlength="3"> %
+
+        </p>
+        <div>
+            <label for="js-core-upgrade">
+                <input type="checkbox" name="core-upgrade" id="js-core-upgrade"> 強化コアの20%防御率無視効果込み
+            </label><br>
+            <label for="js-pressure">
+                <input type="checkbox" name="pressure" id="js-pressure"> プレッシャーのデバフ効果込み
+            </label><br>
+            <label for="js-pressure-enhance">
+                <input type="checkbox" name="pressure-enhance" id="js-pressure-enhance"> ハイパースキル プレッシャー
+                - エンハンス
+                の効果込み
+            </label><br><br>
+        </div>
+        <select id="js-monster" name="monster">
+            <option value="3">防御率300%のMOB</option>
+            <option value="1.8">カオスピンクビーン(180%)</option>
+            <option value="1.6">カオスピンクビーンの石像(160%)</option>
+            <option value="1.2">カオスブラッディクイーン(120%)</option>
+            <option value="1.2">ハードマグナス(120%)</option>
+            <option value="1">カオスバンバン(100%)</option>
+            <option value="1">カオスジャクム(100%)</option>
+            <option value="1">ノーマルシグナス(100%)</option>
+            <option value="0.9">アカイラム(90%)</option>
+            <option value="0.8">カオスピエール(80%)</option>
+            <option value="0.55">モリランマル(55%)</option>
+            <option value="0.5">ノーマルマグナス(50%)</option>
+            <option value="0.25">カオスホーンテイル(25%)</option>
+        </select>
+        <span>に対して通るダメージは <span id="js-damage"></span> % です。</span>
         <p class="note">
             通るダメージは切り上げで計算しており、実際のダメージと異なる場合があります。<br>
             このツールは MapleStory プレイヤーのひとりに過ぎない一個人が開発したものであり、MapleStory を運営している NEXON とは無関係です。<br>
@@ -67,7 +81,8 @@
                 製作者への<a href="https://rimane.net/contact/">お問い合わせ</a>
             </p>
             <small>© 2020 MapleStory 防御率無視簡易計算ツール produced by Rimane</small>
-        </footer>    
+        </footer>
     </div>
 </body>
+
 </html>
