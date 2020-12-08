@@ -6,12 +6,13 @@
         "url": "https://app.rimane.net/maplestory/ignore-guard/"
     },
     "ogp": {
-        "image": "https://app.rimane.net/maplestory/ignore-guard/img/ogp.png",
+        "image": "img/ogp.png",
         "twitter": "RimaneM18"
     },
     "mob":[
-        { "name": "カオスピンクビーン", "guard": "1.6" },
-        { "name": "カオスピンクビーンの石像", "guard": "1.2" },
+        { "name": "カオスピンクビーン", "guard": "1.8" },
+        { "name": "カオスピンクビーンの石像", "guard": "1.6" },
+        { "name": "ハードマグナス", "guard": "1.2" },
         { "name": "カオスブラッディクイーン", "guard": "1.2" },
         { "name": "カオスバンバン", "guard": "1" },
         { "name": "カオスジャクム", "guard": "1"},

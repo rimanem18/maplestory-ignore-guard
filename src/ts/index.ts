@@ -17,10 +17,10 @@ elementList.forEach(element => {
 });
 
 // クッキーのリスト checkbox
-const cookiesList: [string, HTMLInputElement][] = [
-    ["coreUpgrade", coreUpgrade],
-    ["pressure", pressure],
-    ['pressureEnhunce', pressureEnhance],
+const cookiesList: {name:string, input:HTMLInputElement}[] = [
+    {name:"coreUpgrade", input:coreUpgrade},
+    {name:"pressure", input:pressure},
+    {name:"pressureEnhunce", input:pressureEnhance}
 ];
 // 文字列の真偽値を boolean 型に変換
 const toBoolean = (strBool: string): boolean => {
@@ -31,29 +31,24 @@ const toBoolean = (strBool: string): boolean => {
     }
 }
 
-// クッキーのイニシャライズ
-if (Cookies.get('ignore') !== undefined) {
-    ignore.value = Cookies.get('ignore');
-}
-cookiesList.forEach(element => {
-    if (Cookies.get(element[0]) !== undefined) {
-        element[1].checked = toBoolean(Cookies.get(element[0]));
+
+/**
+ * cookie の名前をもとにクッキーの値を取得する
+ * undefindチェックもおこなう
+ * 
+ * @param name クッキーの名前
+ * @param defaultVal undefind だった場合に入れる値
+ */
+const getCookie = (name: string, defaultVal: string )
+    : string => {
+    let value = defaultVal;
+
+    if (Cookies.get(name) !== undefined) {
+        value = Cookies.get(name);
     }
-});
 
-
-copyUrl.addEventListener('click', () => {
-    let e = document.createElement('textarea');
-    ((d) => {
-        e.textContent = d.title + ' ' + d.URL;
-        d.body.appendChild(e);
-        e.select();
-        d.execCommand('copy');
-        d.body.removeChild(e);
-    })(document);
-    copyUrl.textContent = "コピーしました"
-
-});
+    return value;
+}
 
 /**
  * プレッシャーによる率無視計算結果を小数点で返す
@@ -80,6 +75,11 @@ const pressureCalc = (enhance: boolean): number => {
     return ignore;
 }
 
+/**
+ * 選択されたMOBの防御率に対してどれだけダメージが通るか
+ * 
+ * @param selectMonster 
+ */
 const calc = (selectMonster) => {
     // 防御率無視が100を超過
     let ignoreGuard: number = Number(ignore.value)
@@ -114,15 +114,39 @@ const calc = (selectMonster) => {
     // クッキーの再セット
     Cookies.set('ignore', ignoreGuard, { expires: 7 });
     cookiesList.forEach(element => {
-        Cookies.set(element[0], element[1].checked, { expires: 7 });
+        Cookies.set(element['name'], element['input'].checked, { expires: 7 });
     });
 
-    
+
     // 計算結果を出力
     damage = Math.ceil(damage * 100);
     viewDamage.textContent = damage.toString();
 }
 
+
+// クッキーのイニシャライズ
+ignore.value = getCookie('ignore', "100");
+cookiesList.forEach(element => {
+    element['input'].checked = toBoolean(<string>getCookie(element['name'], "false"));
+});
+
+
+copyUrl.addEventListener('click', () => {
+    let e = document.createElement('textarea');
+    ((d) => {
+        e.textContent = d.title + ' ' + d.URL;
+        d.body.appendChild(e);
+        e.select();
+        d.execCommand('copy');
+        d.body.removeChild(e);
+    })(document);
+    copyUrl.textContent = "コピーしました"
+
+});
+
+const addIgnoreGuard = () => {
+
+}
 
 calc(selectMonster);
 

@@ -17,7 +17,7 @@
     <meta property="og:image" content="<%= ogp.image %>">
 
     <!-- Twitter Card -->
-    <meta name="twitter:image" content="<%= ogp.image %>">
+    <meta name="twitter:image" content="<%= app.url+ogp.image %>">
     <meta name="twitter:domain" content="<%= app.domain %>">
     <meta name="twitter:card" content="summary">
     <meta property="twitter:description" content="<%= app.description %>">
@@ -31,14 +31,15 @@
 
 <body>
     <div class="wrapper">
-        <h1 class="title">
-            <div class="subtitle">MapleStory</div>
-            防御率無視簡易計算ツール
-        </h1>
+        <header class="header">
+            <h1 class="title">
+                <div class="subtitle">MapleStory</div>
+                防御率無視簡易計算ツール
+            </h1>
+        </header>
         <p>
-            自分の防御率無視:<input type="number" name="js-my-guard-
-                ignore" id="js-my-ignore-guard" class="ignore-guard" value="100" maxlength="3"> %
-
+            自分の防御率無視:<input type="number" name="js-my-guard-ignore" id="js-my-ignore-guard" class="ignore-guard"
+                value="100" maxlength="3"> %
         </p>
         <div>
             <% checkbox.forEach(element => { %>
@@ -58,6 +59,9 @@
             </select>
             <span>に対して通るダメージは <span id="js-damage"></span>% です。</span>
         </div>
+        <p>
+            あと <input type="number" class="add-ignore-guard">%の防御率無視が追加されれば、防御率無視<span id="ignore-guard-if"></span>%になります。
+        </p>
         <p class="note">
             通るダメージは切り上げで計算しており、実際のダメージと異なる場合があります。<br>
             このツールは MapleStory プレイヤーのひとりに過ぎない一個人が開発したものであり、MapleStory を運営している NEXON とは無関係です。<br>
