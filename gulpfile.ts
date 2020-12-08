@@ -209,7 +209,7 @@ const minifyHTML = () => {
 // commands
 exports.default = series(
 	parallel(bundle, ejsFiles, styles, image, font),
-	parallel(minifyHTML), // minify task
+	// parallel(minifyHTML), // minify task
 	series(server, watchFiles)
 );
 exports.image = series(

@@ -1,5 +1,30 @@
 {
-    "site": {
-        "title": "MapleStory 防御率無視簡易計算ツール"
-    }
+    "app": {
+        "title": "MapleStory 防御率無視簡易計算ツール",
+        "description": "MapleStory の防御率無視の効果を可視化するための計算ツール",
+        "domain": "app.rimane.net",
+        "url": "https://app.rimane.net/maplestory/ignore-guard/"
+    },
+    "ogp": {
+        "image": "https://app.rimane.net/maplestory/ignore-guard/img/ogp.png",
+        "twitter": "RimaneM18"
+    },
+    "mob":[
+        { "name": "カオスピンクビーン", "guard": "1.6" },
+        { "name": "カオスピンクビーンの石像", "guard": "1.2" },
+        { "name": "カオスブラッディクイーン", "guard": "1.2" },
+        { "name": "カオスバンバン", "guard": "1" },
+        { "name": "カオスジャクム", "guard": "1"},
+        { "name": "ノーマルシグナス", "guard": "1" },
+        { "name": "アカイラム", "guard": "0.9"},
+        { "name": "カオスピエール", "guard": "0.8" },
+        { "name": "モリランマル", "guard": "0.55"},
+        { "name": "ノーマルマグナス", "guard": "0.5" },
+        { "name": "カオスホーンテイル", "guard": "0.25"}
+    ],
+    "checkbox": [
+        {"name": "core-upgrade" , "text": "強化コアの防御率無視20%増加効果込み"},
+        {"name": "pressure" , "text": "プレッシャーのデバフ効果込み"},
+        {"name": "pressure-enhance" , "text": "ハイパースキル プレッシャー - エンハンス の効果込み"}
+    ]
 }

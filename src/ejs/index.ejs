@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= app.title %> </title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="<%= app.description %>">
+
+    <!-- ogp -->
+    <meta property="og:url" content="<%= app.url %>" />
+    <meta property="og:type" content="applicaiton" />
+    <meta property="og:title" content="<%= app.title %>" />
+    <meta property="og:description" content="<%= app.description %>" />
+    <meta property="og:site_name" content="<%= app.title %>" />
+    <meta property="og:image" content="<%= ogp.image %>">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:image" content="<%= ogp.image %>">
+    <meta name="twitter:domain" content="<%= app.domain %>">
+    <meta name="twitter:card" content="summary">
+    <meta property="twitter:description" content="<%= app.description %>">
+    <meta property="twitter:title" content="<%= app.title %>">
+    <meta property="twitter:url" content="<%= app.url %>">
+    <meta name="twitter:creator" content="@<%= ogp.twitter %>">
+    <meta name="twitter:site" content="@<%= ogp.twitter %>">
+
+    <script defer src="js/bundle.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h1 class="title">
+            <div class="subtitle">MapleStory</div>
+            防御率無視簡易計算ツール
+        </h1>
+        <p>
+            自分の防御率無視:<input type="number" name="js-my-guard-
+                ignore" id="js-my-ignore-guard" class="ignore-guard" value="100" maxlength="3"> %
+
+        </p>
+        <div>
+            <% checkbox.forEach(element => { %>
+            <label for="js-<%= element.name %>" id="<%= element.name %>-label">
+                <input type="checkbox" name="<%= element.name %>" id="js-<%= element.name %>">
+                <%= element.text %>
+            </label><br>
+            <% }); %>
+            <br>
+        </div>
+        <div class="result">
+            <select id="js-monster" name="monster">
+                <option value="3">防御率300%のMOB</option>
+                <% mob.forEach(data => { %>
+                <option value="<%= data.guard %>"><%= data.name %>(<%= Math.floor(data.guard * 100) %>%)</option>
+                <% }); %>
+            </select>
+            <span>に対して通るダメージは <span id="js-damage"></span>% です。</span>
+        </div>
+        <p class="note">
+            通るダメージは切り上げで計算しており、実際のダメージと異なる場合があります。<br>
+            このツールは MapleStory プレイヤーのひとりに過ぎない一個人が開発したものであり、MapleStory を運営している NEXON とは無関係です。<br>
+            利用によって何かしらの損害が生じても、いかなる責任も負いません。<br>
+        </p>
+        <footer class="footer">
+            <button id="js-copy-url" class="copy-url">URLをコピーしてシェア</button>
+            <p>
+                情報のソース<br>
+                各モンスターの防御率 : <a
+                    href="http://maplesonar.com/wiki/index.php?MapleStoryDrop-wiki">MapleStoryDrop-wiki</a><br>
+            </p>
+            <p>
+                製作者連絡先<br>
+                <a href="https://rimane.net/contact/">お問い合わせフォーム</a><br>
+                Twitter : <a href="https://twitter.com/<%= ogp.twitter %>   ">@<%= ogp.twitter %></a>
+            </p>
+            <small>© 2020 <%= app.title %> produced by Rimane</small>
+        </footer>
+    </div>
+</body>
+
+</html>
