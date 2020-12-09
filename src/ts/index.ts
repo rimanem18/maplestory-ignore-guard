@@ -8,6 +8,8 @@ const coreUpgrade: HTMLInputElement = <HTMLInputElement>document.getElementById(
 const pressure: HTMLInputElement = <HTMLInputElement>document.getElementById('js-pressure')
 const pressureEnhance: HTMLInputElement = <HTMLInputElement>document.getElementById('js-pressure-enhance')
 const enhanceLabel: HTMLElement = document.getElementById('pressure-enhance-label');
+const ignoreGuardIf = document.getElementById('ignore-guard-if')
+const addIgnoreIf: HTMLInputElement = <HTMLInputElement>document.getElementById('add-ignore-if');
 
 const elementList = [ignore, selectMonster, pressure, pressureEnhance, coreUpgrade];
 elementList.forEach(element => {
@@ -124,6 +126,18 @@ const calc = (selectMonster) => {
 }
 
 
+/**
+ * もし防御率無視が増えたらいくつになるか、という想定で計算できる関数
+ * 
+ * @param add 増える率無視
+ * @param now 現在の率無視
+ */
+const addIgnoreGuard = (add: number, now: number) => {
+    let result = (now / 100) * (add / 100);
+    ignoreGuardIf.textContent = result.toString();
+}
+
+
 // クッキーのイニシャライズ
 ignore.value = getCookie('ignore', "100");
 cookiesList.forEach(element => {
@@ -144,9 +158,9 @@ copyUrl.addEventListener('click', () => {
 
 });
 
-const addIgnoreGuard = () => {
-
-}
+addIgnoreIf.addEventListener('change', ()=>{
+    addIgnoreGuard(Number(addIgnoreIf), Number(ignore));
+});
 
 calc(selectMonster);
 
