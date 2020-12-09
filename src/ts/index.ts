@@ -1,3 +1,5 @@
+"use strict";
+
 const Cookies = require('js-cookie');
 
 const selectMonster: HTMLInputElement = <HTMLInputElement>document.getElementById('js-monster');
@@ -9,20 +11,25 @@ const pressure: HTMLInputElement = <HTMLInputElement>document.getElementById('js
 const pressureEnhance: HTMLInputElement = <HTMLInputElement>document.getElementById('js-pressure-enhance')
 const enhanceLabel: HTMLElement = document.getElementById('pressure-enhance-label');
 const ignoreGuardIf = document.getElementById('ignore-guard-if')
-const addIgnoreIf: HTMLInputElement = <HTMLInputElement>document.getElementById('add-ignore-if');
 
-const elementList = [ignore, selectMonster, pressure, pressureEnhance, coreUpgrade];
+const addIgnoreIf: HTMLInputElement = <HTMLInputElement>document.getElementById('add-ignore-if');
+// const damageReflect: HTMLInputElement = <HTMLInputElement>document.getElementById('js-damage-reflect');
+
+const elementList = [ignore, selectMonster, pressure, pressureEnhance, coreUpgrade, addIgnoreIf];
 elementList.forEach(element => {
-    element.addEventListener('change', function () {
+    element.addEventListener('change', () => {
         calc(selectMonster);
+        addIgnoreGuard(Number(addIgnoreIf.value), Number(ignore.value));
     })
 });
 
+
 // クッキーのリスト checkbox
-const cookiesList: {name:string, input:HTMLInputElement}[] = [
-    {name:"coreUpgrade", input:coreUpgrade},
-    {name:"pressure", input:pressure},
-    {name:"pressureEnhunce", input:pressureEnhance}
+const cookiesList: { name: string, input: HTMLInputElement }[] = [
+    { name: "coreUpgrade", input: coreUpgrade },
+    { name: "pressure", input: pressure },
+    { name: "pressureEnhunce", input: pressureEnhance },
+    // { name: "damageReclect", input: damageReflect }
 ];
 // 文字列の真偽値を boolean 型に変換
 const toBoolean = (strBool: string): boolean => {
@@ -41,7 +48,7 @@ const toBoolean = (strBool: string): boolean => {
  * @param name クッキーの名前
  * @param defaultVal undefind だった場合に入れる値
  */
-const getCookie = (name: string, defaultVal: string )
+const getCookie = (name: string, defaultVal: string)
     : string => {
     let value = defaultVal;
 
@@ -83,6 +90,11 @@ const pressureCalc = (enhance: boolean): number => {
  * @param selectMonster 
  */
 const calc = (selectMonster) => {
+    let damage: number;
+    let pressureIgnore = 1;
+    let coreIgnore = 1;
+    let mobGuard: number = Number(selectMonster.value);
+
     // 防御率無視が100を超過
     let ignoreGuard: number = Number(ignore.value)
     if (ignoreGuard > 100) {
@@ -90,23 +102,23 @@ const calc = (selectMonster) => {
         return;
     }
     // モブが選択されていない
-    let mobGuard: number = Number(selectMonster.value);
     if (selectMonster.value == "") {
         return;
     }
 
     // 防御率無視の計算式
     // 通るダメージ(％)＝1－敵の防御率×(1－防御率無視)
-    let damage: number;
-    let pressureIgnore = 1;
-    let coreIgnore = 1;
 
     pressureIgnore = pressureCalc(pressureEnhance.checked)
 
     if (coreUpgrade.checked === true) {
         coreIgnore = 1 - 0.2;
     }
+
     damage = 1 - mobGuard * (1 - (ignoreGuard / 100)) * pressureIgnore * coreIgnore;
+
+
+
 
     // 計算結果がマイナス
     if (damage * 100 < 0) {
@@ -114,7 +126,7 @@ const calc = (selectMonster) => {
     }
 
     // クッキーの再セット
-    Cookies.set('ignore', ignoreGuard, { expires: 7 });
+    Cookies.set('ignore', ignore.value, { expires: 7 });
     cookiesList.forEach(element => {
         Cookies.set(element['name'], element['input'].checked, { expires: 7 });
     });
@@ -133,7 +145,9 @@ const calc = (selectMonster) => {
  * @param now 現在の率無視
  */
 const addIgnoreGuard = (add: number, now: number) => {
-    let result = (now / 100) * (add / 100);
+    let result = 1 - (1 - (now / 100)) * (1 - (add / 100));
+
+    result = Math.ceil(result * 100)
     ignoreGuardIf.textContent = result.toString();
 }
 
@@ -158,9 +172,5 @@ copyUrl.addEventListener('click', () => {
 
 });
 
-addIgnoreIf.addEventListener('change', ()=>{
-    addIgnoreGuard(Number(addIgnoreIf), Number(ignore));
-});
-
 calc(selectMonster);
-
+addIgnoreGuard(Number(addIgnoreIf.value), Number(ignore.value));

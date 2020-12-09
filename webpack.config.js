@@ -2,8 +2,8 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-	mode: 'production', // 本番用（圧縮される）
-//	mode: 'development', // 開発用（圧縮されない）
+//	mode: 'production', // 本番用（圧縮される）
+	mode: 'development', // 開発用（圧縮されない）
 	entry: './src/ts/index.ts', // バンドル前のエントリポイント
 	output: { // バンドル先
 		filename: 'bundle.js',

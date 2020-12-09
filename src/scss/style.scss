@@ -54,9 +54,16 @@ html,body {
 .copy-url:hover {
   background: #0069d9;
 }
-.ignore-guard {
-    width: 3em;
+%ignore-value {
+  width: 3em;
 }
+.ignore-guard {
+  @extend %ignore-value;
+}
+.add-ignore-if {
+  @extend %ignore-value;
+}
+
 .disabled {
   color: #999999;
 }
