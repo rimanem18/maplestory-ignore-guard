@@ -1,9 +1,6 @@
 const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-	mode: 'production', // 本番用（圧縮される）
-	//	mode: 'development', // 開発用（圧縮されない）
 	entry: './src/ts/index.ts', // バンドル前のエントリポイント
 	output: { // バンドル先
 		filename: 'bundle.js',
@@ -31,18 +28,5 @@ module.exports = {
 		],
 	},
 	// ES5(IE11等)向けの指定
-	target: ["web", "es5"],
-	optimization: {
-		minimize: true,
-		minimizer: [new TerserPlugin({
-			terserOptions: {
-				ecma: 6,
-				compress: { drop_console: true },
-				output: {
-					comments: false,
-					beautify: false
-				}
-			}
-		})]
-	}
+	target: ["web", "es5"]
 };

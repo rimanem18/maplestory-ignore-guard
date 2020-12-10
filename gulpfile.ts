@@ -34,7 +34,8 @@ const cleanCSS = require("gulp-clean-css");
 // バンドル用
 const webpackStream = require("webpack-stream");
 const webpack = require("webpack");
-const webpackConfig = require("./webpack.config");
+const webpackConfigProd = require("./webpack.prod");
+const webpackConfigDev = require("./webpack.dev");
 
 
 // ディレクトリ
@@ -135,8 +136,13 @@ const font = () => {
 }
 
 // バンドル
-const bundle = () => {
-	return webpackStream(webpackConfig, webpack)
+const bundleDev = () => {
+	return webpackStream(webpackConfigDev, webpack)
+		.pipe(plumber({ errorHandler: errorHandler }))
+		.pipe(dest(PATHS.scripts.dest));
+};
+const bundleProd = () => {
+	return webpackStream(webpackConfigProd, webpack)
 		.pipe(plumber({ errorHandler: errorHandler }))
 		.pipe(dest(PATHS.scripts.dest));
 };
@@ -151,7 +157,7 @@ const watchFiles = done => {
 
 	watch(PATHS.image.src, series(image, reload));
 
-	watch(PATHS.scripts.src, series(bundle));
+	watch(PATHS.scripts.src, series(bundleDev));
 	watch(PATHS.scripts.bundle, series(reload));
 
 	watch(PATHS.font.src, series(font, reload));
@@ -206,14 +212,14 @@ const minifyCSS = () => {
 
 // commands
 exports.default = series(
-	parallel(bundle, ejsFiles, styles, image, font),
+	parallel(bundleDev, ejsFiles, styles, image, font),
 	// parallel(minifyHTML), // minify task
 	series(server, watchFiles)
 );
 exports.image = series(
 	image
 );
-exports.production = series(
-	parallel(bundle, ejsFiles, styles, image, font),  // コンパイル task
+exports.prod = series(
+	parallel(bundleProd, ejsFiles, styles, image, font),  // コンパイル task
 	parallel(minifyHTML, minifyCSS) // minify task
 );
