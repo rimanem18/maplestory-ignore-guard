@@ -2,8 +2,8 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-//	mode: 'production', // 本番用（圧縮される）
-	mode: 'development', // 開発用（圧縮されない）
+	mode: 'production', // 本番用（圧縮される）
+	//	mode: 'development', // 開発用（圧縮されない）
 	entry: './src/ts/index.ts', // バンドル前のエントリポイント
 	output: { // バンドル先
 		filename: 'bundle.js',
@@ -11,21 +11,28 @@ module.exports = {
 	},
 	module: {
 		rules: [
-		  {
-			// 拡張子 .ts の場合
-			test: /\.ts$/,
-			// TypeScript をコンパイルする
-			use: 'ts-loader',
-		  },
+			{
+				// 拡張子 .js の場合
+				test: /\.ts$/,
+				use: [
+					{
+						// Babel を利用する
+						loader: "babel-loader",
+						// Babel のオプションを指定する
+						options: {
+							presets: [
+								// プリセットを指定することで、ES2020 を ES5 に変換
+								"@babel/preset-env", "@babel/preset-typescript"
+							],
+						},
+					},
+				],
+			},
 		],
-	  },
-	  resolve: {
-		// 拡張子を配列で指定
-		extensions: [
-		  '.ts', '.js',
-		],
-	  },
-	  optimization: {
+	},
+	// ES5(IE11等)向けの指定
+	target: ["web", "es5"],
+	optimization: {
 		minimize: true,
 		minimizer: [new TerserPlugin({
 			terserOptions: {

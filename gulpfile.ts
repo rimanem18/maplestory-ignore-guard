@@ -105,18 +105,6 @@ const styles = () => {
 		.pipe(dest(PATHS.styles.dest));
 }
 
-// TypeScript コンパイル
-// const ts = () => {
-// 	return src(PATHS.scripts.src)
-// 		.pipe(plumber({ errorHandler: errorHandler }))
-// 		.pipe(
-// 			typescript({
-// 				target: "ES6"
-// 			})
-// 		)
-// 		.js.pipe(dest(PATHS.scripts.dest));
-// }
-
 // images
 const image = () => {
 	return src(PATHS.image.src)
