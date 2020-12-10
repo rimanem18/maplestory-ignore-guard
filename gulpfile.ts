@@ -27,8 +27,10 @@ const browserSync = require('browser-sync').create();
 // エラー停止防御 / デスクトップ通知
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
-// HTML 圧縮
+// HTML / CSS 圧縮
 const htmlmin = require('gulp-htmlmin');
+const cleanCSS = require("gulp-clean-css");
+
 // バンドル用
 const webpackStream = require("webpack-stream");
 const webpack = require("webpack");
@@ -156,7 +158,7 @@ const bundle = () => {
 const watchFiles = done => {
 	watch(PATHS.config, series(reload));
 
-	watch(PATHS.ejs._src, series(ejsFiles, minifyHTML, reload));
+	watch(PATHS.ejs._src, series(ejsFiles, reload));
 	watch(PATHS.styles._src, series(styles, reload));
 
 	watch(PATHS.image.src, series(image, reload));
@@ -206,6 +208,14 @@ const minifyHTML = () => {
 		.pipe(dest(PATHS.ejs.dest))
 }
 
+// CSS 圧縮
+const minifyCSS = () => {
+	return src(PATHS.styles.dest + '/**/*.css')
+	.pipe(cleanCSS())
+	.pipe(dest(PATHS.styles.dest));
+}
+
+
 // commands
 exports.default = series(
 	parallel(bundle, ejsFiles, styles, image, font),
@@ -217,5 +227,5 @@ exports.image = series(
 );
 exports.production = series(
 	parallel(bundle, ejsFiles, styles, image, font),  // コンパイル task
-	parallel(minifyHTML) // minify task
+	parallel(minifyHTML, minifyCSS) // minify task
 );
