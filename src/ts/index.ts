@@ -52,20 +52,21 @@ const getCookie = (name: string, defaultVal: string)
     return value;
 }
 
+
 /**
- * プレッシャーによる率無視計算結果を小数点で返す
+ * プレッシャーによる計算
  * 
  * @param enhance エンハンスにチェックが入っているかどうか
  */
 const pressureCalc = (enhance: boolean): number => {
-    let ignore: number = 0;
+    let result: number = 0;
 
     if (pressure.checked === true) {
 
         if (enhance === true) {
-            ignore = 0.5;
+            result = 0.5;
         } else {
-            ignore = 0.3;
+            result = 0.3;
         }
         enhanceLabel.classList.remove('disabled');
         pressureEnhance.disabled = false;
@@ -74,8 +75,7 @@ const pressureCalc = (enhance: boolean): number => {
         pressureEnhance.disabled = true;
     }
 
-
-    return ignore;
+    return result;
 }
 
 
@@ -90,6 +90,13 @@ const damageCalc = (selectMonster): number => {
     let coreIgnore = 0;
     let mobGuard: number = Number(selectMonster.value);
 
+    // プレッシャーにチェックが入っている場合は防御率減少
+    mobGuard = mobGuard - pressureCalc(pressureEnhance.checked);
+    if(mobGuard < 0) {
+        // マイナスになってしまう場合は0
+        mobGuard = 0;
+    }
+    
     // モブが選択されていない
     if (selectMonster.value == "") {
         return;
@@ -115,8 +122,6 @@ const damageCalc = (selectMonster): number => {
         return;
     }
 
-    pressureIgnore = pressureCalc(pressureEnhance.checked);
-
     // 強化コアの追加効果反映にチェック
     if (coreUpgrade.checked === true) {
         coreIgnore = 0.2;
@@ -124,7 +129,7 @@ const damageCalc = (selectMonster): number => {
 
     // 防御率無視の計算式
     // 通るダメージ(％)＝1－敵の防御率×(1－防御率無視)
-    let ignoreAll: number[] = [ignoreGuard / 100, pressureIgnore, coreIgnore];
+    let ignoreAll: number[] = [ignoreGuard / 100, coreIgnore];
     if(damageReflect.checked === true){
         ignoreAll.push(Number(addIgnoreIf.value) / 100);
     }
