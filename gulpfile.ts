@@ -75,8 +75,6 @@ const errorHandler = (err, stats) => {
 	}
 }
 
-
-
 // EJS コンパイル
 const ejsFiles = () => {
 	// JSONファイル読み込み
