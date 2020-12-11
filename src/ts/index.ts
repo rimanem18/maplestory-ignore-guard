@@ -6,13 +6,13 @@ const Cookies = require('js-cookie');
 
 const selectMonster: HTMLInputElement = <HTMLInputElement>document.getElementById('js-monster');
 const ignore: HTMLInputElement = <HTMLInputElement>document.getElementById('js-my-ignore-guard');
-const viewDamage:HTMLElement = <HTMLElement>document.getElementById('js-damage');
-const copyUrl:HTMLElement = <HTMLElement>document.getElementById('js-copy-url')
+const viewDamage: HTMLElement = <HTMLElement>document.getElementById('js-damage');
+const copyUrl: HTMLElement = <HTMLElement>document.getElementById('js-copy-url')
 const coreUpgrade: HTMLInputElement = <HTMLInputElement>document.getElementById('js-core-upgrade')
 const pressure: HTMLInputElement = <HTMLInputElement>document.getElementById('js-pressure')
 const pressureEnhance: HTMLInputElement = <HTMLInputElement>document.getElementById('js-pressure-enhance')
 const enhanceLabel: HTMLElement = <HTMLElement>document.getElementById('pressure-enhance-label');
-const ignoreGuardIf:HTMLElement = <HTMLElement>document.getElementById('ignore-guard-if')
+const ignoreGuardIf: HTMLElement = <HTMLElement>document.getElementById('ignore-guard-if')
 
 const addIgnoreIf: HTMLInputElement = <HTMLInputElement>document.getElementById('add-ignore-if');
 const damageReflect: HTMLInputElement = <HTMLInputElement>document.getElementById('js-damage-reflect');
@@ -54,73 +54,20 @@ const getCookie = (name: string, defaultVal: string)
     return value;
 }
 
-
-/**
- * プレッシャーによる計算
- * 
- * @param enhance エンハンスにチェックが入っているかどうか
- */
-// const pressureCalc = (enhance: boolean): number => {
-//     let result: number = 0;
-
-//     if (pressure.checked === true) {
-
-//         if (enhance === true) {
-//             result = 0.5;
-//         } else {
-//             result = 0.3;
-//         }
-//         enhanceLabel.classList.remove('disabled');
-//         pressureEnhance.disabled = false;
-//     } else {
-//         enhanceLabel.classList.add('disabled');
-//         pressureEnhance.disabled = true;
-//     }
-
-//     return result;
-// }
-
-
 let damage: number;
 /**
  * 選択されたMOBの防御率に対してどれだけダメージが通るか
  * 
  * @param selectMonster 
  */
-const damageCalc = (selectMonster: HTMLInputElement): number => {
+const damageCalc = (mobGuard: number): number => {
     let coreIgnore = 0;
-    let mobGuard: number = Number(selectMonster.value);
 
     // プレッシャーにチェックが入っている場合は防御率減少
     mobGuard = mobGuard - IgnoreGuardCalc.pressure(pressure, pressureEnhance, enhanceLabel);
-    if(mobGuard < 0) {
+    if (mobGuard < 0) {
         // マイナスになってしまう場合は0
         mobGuard = 0;
-    }
-    
-    // モブが選択されていない
-    if (selectMonster.value == "") {
-        return damage;
-    }
-
-    // 数値が0 - 100の範囲をはみ出さないように
-    let ignoreGuard: number = Number(ignore.value)
-    if (ignoreGuard > 100) {
-        ignore.value = (100).toString();
-        return damage;
-    }
-    if (ignoreGuard < 0) {
-        ignore.value = (0).toString();
-        return damage;
-    }
-    let addIgnoreGuardIf = Number(addIgnoreIf.value)
-    if(addIgnoreGuardIf > 100){
-        addIgnoreIf.value = (100).toString();
-        return damage;
-    }
-    if(addIgnoreGuardIf < 0){
-        addIgnoreIf.value = (0).toString();
-        return damage;
     }
 
     // 強化コアの追加効果反映にチェック
@@ -130,10 +77,13 @@ const damageCalc = (selectMonster: HTMLInputElement): number => {
 
     // 防御率無視の計算式
     // 通るダメージ(％)＝1－敵の防御率×(1－防御率無視)
-    let ignoreAll: number[] = [ignoreGuard / 100, coreIgnore];
-    if(damageReflect.checked === true){
+    let ignoreAll: number[] = [Number(ignore.value) / 100, coreIgnore];
+
+    // 想定率無視をダメージに反映する場合
+    if (damageReflect.checked === true) {
         ignoreAll.push(Number(addIgnoreIf.value) / 100);
     }
+
     damage = 1 - mobGuard * (1 - IgnoreGuardCalc.main(ignoreAll));
 
     // 計算結果がマイナス
@@ -152,37 +102,6 @@ const damageCalc = (selectMonster: HTMLInputElement): number => {
 
     return damage;
 }
-
-
-// /**
-//  * 渡された配列の中身をもとに防御率無視を計算する
-//  * 
-//  * @param array 単体の防御率無視の小数点配列
-//  * @return result 防御率無視
-//  */
-// const ignoreGuardCalc = (array: number[]): number => {
-//     let result: number = 1;
-
-//     array.forEach(element => {
-//         result *= 1 - element;
-//     });
-//     result = 1 - result;
-
-//     return result;
-// }
-
-// /**
-//  * もし防御率無視が増えたらいくつになるか、という想定で計算できる関数
-//  * 
-//  * @param add 増える率無視
-//  * @param now 現在の率無視
-//  */
-// const addIgnoreGuard = (add: number, now: number):number => {
-//     let result = IgnoreGuard.addIf([now / 100, add / 100]);
-
-//     result = Math.ceil(result * 100)
-//     return result;
-// }
 
 
 // クッキーのイニシャライズ
@@ -212,15 +131,39 @@ elementList.forEach(element => {
 });
 
 
+/**
+ * 入力可能な範囲を指定する
+ * 
+ * @param value 現時点での値
+ * @param min 最低値
+ * @param max 最大値
+ */
+const rangeControl = (value: number, min: number, max: number):number =>{
+    if (value > max) {
+        return  max;
+    }
+    if (value < min) {
+        return min;
+    }
+    return value;
+}
+
+
 // 計算結果を出力
-const viewAll = () =>{
-    if(damageReflect.checked === true){
+const viewAll = () => {
+    if (damageReflect.checked === true) {
         viewDamage.classList.add('red');
     } else {
         viewDamage.classList.remove('red');
     }
 
-    viewDamage.textContent = damageCalc(selectMonster).toString();
-    ignoreGuardIf.textContent = IgnoreGuardCalc.addIf(Number(addIgnoreIf.value), Number(ignore.value)).toString();    
+    // 入力可能な範囲を0-100に
+    const inputList = [ignore, addIgnoreIf];
+    inputList.forEach(element => {
+        element.value = rangeControl(Number(element.value), 0, 100).toString();
+    });
+
+    viewDamage.textContent = damageCalc(Number(selectMonster.value)).toString();
+    ignoreGuardIf.textContent = IgnoreGuardCalc.addIf(Number(addIgnoreIf.value), Number(ignore.value)).toString();
 };
 viewAll();
