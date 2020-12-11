@@ -1,5 +1,7 @@
 "use strict";
 
+const IgnoreGuardCalc = require('./modules/IgnoreGuardCalc.ts');
+
 const Cookies = require('js-cookie');
 
 const selectMonster: HTMLInputElement = <HTMLInputElement>document.getElementById('js-monster');
@@ -58,25 +60,25 @@ const getCookie = (name: string, defaultVal: string)
  * 
  * @param enhance エンハンスにチェックが入っているかどうか
  */
-const pressureCalc = (enhance: boolean): number => {
-    let result: number = 0;
+// const pressureCalc = (enhance: boolean): number => {
+//     let result: number = 0;
 
-    if (pressure.checked === true) {
+//     if (pressure.checked === true) {
 
-        if (enhance === true) {
-            result = 0.5;
-        } else {
-            result = 0.3;
-        }
-        enhanceLabel.classList.remove('disabled');
-        pressureEnhance.disabled = false;
-    } else {
-        enhanceLabel.classList.add('disabled');
-        pressureEnhance.disabled = true;
-    }
+//         if (enhance === true) {
+//             result = 0.5;
+//         } else {
+//             result = 0.3;
+//         }
+//         enhanceLabel.classList.remove('disabled');
+//         pressureEnhance.disabled = false;
+//     } else {
+//         enhanceLabel.classList.add('disabled');
+//         pressureEnhance.disabled = true;
+//     }
 
-    return result;
-}
+//     return result;
+// }
 
 
 let damage: number;
@@ -88,10 +90,9 @@ let damage: number;
 const damageCalc = (selectMonster: HTMLInputElement): number => {
     let coreIgnore = 0;
     let mobGuard: number = Number(selectMonster.value);
-    let ignoreGuard: number = Number(ignore.value)
 
     // プレッシャーにチェックが入っている場合は防御率減少
-    mobGuard = mobGuard - pressureCalc(pressureEnhance.checked);
+    mobGuard = mobGuard - IgnoreGuardCalc.pressure(pressure, pressureEnhance, enhanceLabel);
     if(mobGuard < 0) {
         // マイナスになってしまう場合は0
         mobGuard = 0;
@@ -103,6 +104,7 @@ const damageCalc = (selectMonster: HTMLInputElement): number => {
     }
 
     // 数値が0 - 100の範囲をはみ出さないように
+    let ignoreGuard: number = Number(ignore.value)
     if (ignoreGuard > 100) {
         ignore.value = (100).toString();
         return damage;
@@ -132,7 +134,7 @@ const damageCalc = (selectMonster: HTMLInputElement): number => {
     if(damageReflect.checked === true){
         ignoreAll.push(Number(addIgnoreIf.value) / 100);
     }
-    damage = 1 - mobGuard * (1 - ignoreGuardCalc(ignoreAll));
+    damage = 1 - mobGuard * (1 - IgnoreGuardCalc.main(ignoreAll));
 
     // 計算結果がマイナス
     if (damage * 100 < 0) {
@@ -152,35 +154,35 @@ const damageCalc = (selectMonster: HTMLInputElement): number => {
 }
 
 
-/**
- * 渡された配列の中身をもとに防御率無視を計算する
- * 
- * @param array 単体の防御率無視の小数点配列
- * @return result 防御率無視
- */
-const ignoreGuardCalc = (array: number[]): number => {
-    let result: number = 1;
+// /**
+//  * 渡された配列の中身をもとに防御率無視を計算する
+//  * 
+//  * @param array 単体の防御率無視の小数点配列
+//  * @return result 防御率無視
+//  */
+// const ignoreGuardCalc = (array: number[]): number => {
+//     let result: number = 1;
 
-    array.forEach(element => {
-        result *= 1 - element;
-    });
-    result = 1 - result;
+//     array.forEach(element => {
+//         result *= 1 - element;
+//     });
+//     result = 1 - result;
 
-    return result;
-}
+//     return result;
+// }
 
-/**
- * もし防御率無視が増えたらいくつになるか、という想定で計算できる関数
- * 
- * @param add 増える率無視
- * @param now 現在の率無視
- */
-const addIgnoreGuard = (add: number, now: number):number => {
-    let result = ignoreGuardCalc([now / 100, add / 100]);
+// /**
+//  * もし防御率無視が増えたらいくつになるか、という想定で計算できる関数
+//  * 
+//  * @param add 増える率無視
+//  * @param now 現在の率無視
+//  */
+// const addIgnoreGuard = (add: number, now: number):number => {
+//     let result = IgnoreGuard.addIf([now / 100, add / 100]);
 
-    result = Math.ceil(result * 100)
-    return result;
-}
+//     result = Math.ceil(result * 100)
+//     return result;
+// }
 
 
 // クッキーのイニシャライズ
@@ -219,6 +221,6 @@ const viewAll = () =>{
     }
 
     viewDamage.textContent = damageCalc(selectMonster).toString();
-    ignoreGuardIf.textContent = addIgnoreGuard(Number(addIgnoreIf.value), Number(ignore.value)).toString();    
+    ignoreGuardIf.textContent = IgnoreGuardCalc.addIf(Number(addIgnoreIf.value), Number(ignore.value)).toString();    
 };
 viewAll();
