@@ -26,9 +26,7 @@ export const ignoreGuardCalc = (array: number[]): number => {
  * @param now 現在の率無視
  */
 export const addIf = (add: number, now: number): number => {
-    let result: number = ignoreGuardCalc([now / 100, add / 100]);
-
-    result = Math.ceil(result * 100)
+    let result: number = ignoreGuardCalc([now, add]);
     return result;
 }
 
@@ -110,24 +108,26 @@ export const rangeControl = (value: number, min: number, max: number): number =>
 /**
  * 強化コア分や想定反映をふくめた最終率無視を計算、配列にして返す
  * 
- * @param ignoreGuard 
- * @param coreUpgrade 
+ * @param ignoreGuard 防御率
+ * @param coreUpgrade 強化コアのチェックボックス
+ * @param damageReflect 想定反映するかどうか
+ * @param addIgnoreIf 想定率無視
  */
-export const ignoreAllCalc = (ignoreGuard:HTMLInputElement, coreUpgrade:HTMLInputElement, damageReflect:HTMLInputElement, addIgnoreIf:HTMLInputElement):number[] =>{
+export const ignoreAllCalc = (ignoreGuardVal:number, coreUpgradeBool:boolean, reflectBool:boolean, addIgnoreIfVal:number):number[] =>{
     let coreIgnore: number = 0;
 
     // 強化コアの追加効果反映にチェック
-    if (coreUpgrade.checked === true) {
+    if (coreUpgradeBool === true) {
         coreIgnore = 0.2;
     }
 
     // 防御率無視の計算式
     // 通るダメージ(％)＝1－敵の防御率×(1－防御率無視)
-    let result: number[] = [Number(ignoreGuard.value) / 100, coreIgnore];
+    let result: number[] = [ignoreGuardVal, coreIgnore];
 
     // 想定率無視をダメージに反映する場合
-    if (damageReflect.checked === true) {
-        result.push(Number(addIgnoreIf.value) / 100);
+    if (reflectBool === true) {
+        result.push(addIgnoreIfVal);
     }
 
     return result;
@@ -137,10 +137,11 @@ export const ignoreAllCalc = (ignoreGuard:HTMLInputElement, coreUpgrade:HTMLInpu
 /**
  * 選択されたMOBの防御率に対してどれだけダメージが通るか
  * 
- * @param mobGuard モブの防御率
- * @return damage 通るダメージ
+ * @param mobGuard 
+ * @param ignoreGuardVal 
+ * @param pressureResult 
  */
-export const damageCalc = (mobGuard: number, ignoreGuardVal: number, pressureResult: number, coreUpgrade: HTMLInputElement): number => {
+export const damageCalc = (mobGuard: number, ignoreGuardVal: number, pressureResult: number): number => {
     let damage: number;
 
     // プレッシャーにチェックが入っている場合は防御率減少
@@ -176,8 +177,6 @@ export const initCookies = (cookiesList : { name: string, input: HTMLInputElemen
         element.input.checked = toBoolean(<string>getCookie(element.name, "false"));
     });
 }
-
-
 
 /**
  * クッキーに値を再セット
