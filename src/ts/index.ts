@@ -1,6 +1,9 @@
 "use strict";
 
+import { ignoreAllCalc } from "./modules/indexModel";
+
 const model = require('./modules/indexModel.ts');
+
 
 const viewDamage: HTMLElement = <HTMLElement>document.getElementById('js-damage');
 const copyUrl: HTMLElement = <HTMLElement>document.getElementById('js-copy-url')
@@ -23,19 +26,13 @@ const cookiesList: { name: string, input: HTMLInputElement }[] = [
     { name: "damageReflect", input: damageReflect }
 ];
 
-
-const elementList = [ignoreGuard, selectMob, pressure, pressureEnhance, coreUpgrade, addIgnoreIf, damageReflect];
-
-// クッキーのイニシャライズ
-const CookiesInit = () => {
-    ignoreGuard.value = model.getCookie('ignore', "100");
-    cookiesList.forEach(element => {
-        element['input'].checked = model.toBoolean(<string>model.getCookie(element['name'], "false"));
-    });
-}
+// チェックボックス以外の要素もふくめて定義
+const elementList: HTMLInputElement[] = [
+    ignoreGuard, selectMob, pressure, pressureEnhance, coreUpgrade, addIgnoreIf, damageReflect
+];
 
 
-CookiesInit();
+model.initCookies(cookiesList, ignoreGuard);
 
 copyUrl.addEventListener('click', () => {
     let e = document.createElement('textarea');
@@ -58,8 +55,10 @@ const viewAll = (): void => {
         viewDamage.classList.remove('red');
     }
 
-    model.resetCookies(cookiesList, elementList);
-    
+    model.resetCookies(cookiesList, ignoreGuard);
+
+    const ignoreAll: number[] = model.ignoreAllCalc(ignoreGuard, coreUpgrade, damageReflect, addIgnoreIf);
+    const ignoreGuardVal:number = model.ignoreGuardCalc(ignoreAll);
 
     // 入力可能な範囲を0-100に
     const inputList = [ignoreGuard, addIgnoreIf];
@@ -67,7 +66,9 @@ const viewAll = (): void => {
         element.value = model.rangeControl(Number(element.value), 0, 100).toString();
     });
 
-    viewDamage.textContent = model.damageCalc(Number(selectMob.value), elementList).toString();
+    const pressureResult: number = model.pressureCalc(pressure, pressureEnhance, enhanceLabel);
+
+    viewDamage.textContent = model.damageCalc(Number(selectMob.value), ignoreGuardVal,pressure, pressureResult, coreUpgrade ).toString();
     ignoreGuardIf.textContent = model.addIf(Number(addIgnoreIf.value), Number(ignoreGuard.value)).toString();
 };
 

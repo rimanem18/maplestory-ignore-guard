@@ -108,39 +108,50 @@ export const rangeControl = (value: number, min: number, max: number): number =>
 }
 
 /**
- * 選択されたMOBの防御率に対してどれだけダメージが通るか
+ * 強化コア分や想定反映をふくめた最終率無視を計算、配列にして返す
  * 
- * @param mobGuard モブの防御率
- * @return damage 通るダメージ
+ * @param ignoreGuard 
+ * @param coreUpgrade 
  */
-export const damageCalc = (mobGuard: number, html): number => {
-    let coreIgnore = 0;
-    let damage: number;
-
-
-    // プレッシャーにチェックが入っている場合は防御率減少
-    mobGuard = mobGuard - pressureCalc(html.pressure, html.pressureEnhance, html.enhanceLabel);
-    if (mobGuard < 0) {
-        // マイナスになってしまう場合は0
-        mobGuard = 0;
-    }
+export const ignoreAllCalc = (ignoreGuard:HTMLInputElement, coreUpgrade:HTMLInputElement, damageReflect:HTMLInputElement, addIgnoreIf:HTMLInputElement):number[] =>{
+    let coreIgnore: number = 0;
 
     // 強化コアの追加効果反映にチェック
-    if (html.coreUpgrade.checked === true) {
+    if (coreUpgrade.checked === true) {
         coreIgnore = 0.2;
     }
 
     // 防御率無視の計算式
     // 通るダメージ(％)＝1－敵の防御率×(1－防御率無視)
-    let ignoreAll: number[] = [Number(html.ignoreGuard.value) / 100, coreIgnore];
+    let result: number[] = [Number(ignoreGuard.value) / 100, coreIgnore];
 
     // 想定率無視をダメージに反映する場合
-    if (html.damageReflect.checked === true) {
-        ignoreAll.push(Number(html.addIgnoreIf.value) / 100);
+    if (damageReflect.checked === true) {
+        result.push(Number(addIgnoreIf.value) / 100);
+    }
+
+    return result;
+}
+
+
+/**
+ * 選択されたMOBの防御率に対してどれだけダメージが通るか
+ * 
+ * @param mobGuard モブの防御率
+ * @return damage 通るダメージ
+ */
+export const damageCalc = (mobGuard: number, ignoreGuardVal: number, pressureResult: number, coreUpgrade: HTMLInputElement): number => {
+    let damage: number;
+
+    // プレッシャーにチェックが入っている場合は防御率減少
+    mobGuard = mobGuard - pressureResult;
+    if (mobGuard < 0) {
+        // マイナスになってしまう場合は0
+        mobGuard = 0;
     }
 
     // 与えられるダメージ
-    damage = 1 - mobGuard * (1 - ignoreGuardCalc(ignoreAll));
+    damage = 1 - mobGuard * (1 - ignoreGuardVal);
 
     // 計算結果がマイナス
     if (damage * 100 < 0) {
@@ -153,9 +164,30 @@ export const damageCalc = (mobGuard: number, html): number => {
     return damage;
 }
 
-export const resetCookies = (CookiesList : { name: string, input: HTMLInputElement }[], elementList) =>{
-    Cookies.set('ignore', elementList.ignoreGuard.value, { expires: 7 });
-    CookiesList.forEach(element => {
-        Cookies.set(element['name'], element['input'].checked, { expires: 7 });
+/**
+ * クッキーのイニシャライズ
+ * 
+ * @param cookiesList 
+ * @param elementList 
+ */
+export const initCookies = (cookiesList : { name: string, input: HTMLInputElement }[], ignoreGuard) =>{
+    ignoreGuard.value = getCookie('ignore', "100");
+    cookiesList.forEach(element => {
+        element.input.checked = toBoolean(<string>getCookie(element.name, "false"));
+    });
+}
+
+
+
+/**
+ * クッキーに値を再セット
+ * 
+ * @param CookiesList 
+ * @param elementList 
+ */
+export const resetCookies = (cookiesList : { name: string, input: HTMLInputElement }[], ignoreGuard) =>{
+    Cookies.set('ignore', ignoreGuard.value, { expires: 7 });
+    cookiesList.forEach(element => {
+        Cookies.set(element.name, element.input.checked, { expires: 7 });
     });
 }
