@@ -57,19 +57,32 @@ const viewAll = (): void => {
 
     model.resetCookies(cookiesList, ignoreGuard);
 
-    const ignoreAll: number[] = model.ignoreAllCalc(ignoreGuard, coreUpgrade, damageReflect, addIgnoreIf);
-    const ignoreGuardVal:number = model.ignoreGuardCalc(ignoreAll);
-
     // 入力可能な範囲を0-100に
     const inputList = [ignoreGuard, addIgnoreIf];
     inputList.forEach(element => {
         element.value = model.rangeControl(Number(element.value), 0, 100).toString();
     });
 
+    // 百分率の入力値を取得して小数に
+    const ignoreGuardVal: number = Number(ignoreGuard.value) / 100;
+    const addIgnoreIfVal: number = Number(addIgnoreIf.value) / 100;
+
+    // 取得した値をもとに防御率無視の合計を計算
+    const ignoreAll: number[] = model.ignoreAllCalc(ignoreGuardVal, coreUpgrade.checked, damageReflect.checked, addIgnoreIfVal);
+    const ignoreGuardAllVal: number = model.ignoreGuardCalc(ignoreAll);
+
+    // プレッシャーによる防御率減少を計算
     const pressureResult: number = model.pressureCalc(pressure, pressureEnhance, enhanceLabel);
 
-    viewDamage.textContent = model.damageCalc(Number(selectMob.value), ignoreGuardVal,pressure, pressureResult, coreUpgrade ).toString();
-    ignoreGuardIf.textContent = model.addIf(Number(addIgnoreIf.value), Number(ignoreGuard.value)).toString();
+    // MOBの防御率の型変換
+    const mobGuard:number = Number(selectMob.value);
+
+    viewDamage.textContent = model.damageCalc(mobGuard, ignoreGuardAllVal, pressureResult).toString();
+
+    // 小数で取得後、切り上げしてパーセントに変換
+    ignoreGuardIf.textContent = Math.ceil(
+        (model.addIf(addIgnoreIfVal, ignoreGuardVal)) * 100)
+        .toString();
 };
 
 
@@ -87,11 +100,11 @@ viewAll();
 // tests
 console.log('/** tests **/');
 console.log('--- ignoreGuardCalc:');
-console.log(model.ignoreGuardCalc([0.3,0.3,0.3,0.3,0.3,0.3]));
+console.log(model.ignoreGuardCalc([0.3, 0.3, 0.3, 0.3, 0.3, 0.3]));
 console.log('--- addIf:');
-console.log(model.addIf(0.89,0.30));
+console.log(model.addIf(0.89, 0.30));
 console.log('--- pressureCalc:');
-console.log(model.pressureCalc(pressure,pressureEnhance, enhanceLabel));
+console.log(model.pressureCalc(pressure, pressureEnhance, enhanceLabel));
 console.log('--- toBoolean:');
 console.log(model.toBoolean("true"));
 console.log(model.toBoolean("false"));
@@ -100,9 +113,9 @@ console.log('--- getCookie:');
 console.log(model.getCookie('hoge', "100"));
 console.log(model.getCookie('ignore', "100"));
 console.log('--- rangeControl:');
-console.log(model.rangeControl(5,0,100));
-console.log(model.rangeControl(-5,0,100));
-console.log(model.rangeControl(150,0,100));
+console.log(model.rangeControl(5, 0, 100));
+console.log(model.rangeControl(-5, 0, 100));
+console.log(model.rangeControl(150, 0, 100));
 console.log('--- ignoreAllCalc:');
 console.log(model.ignoreAllCalc(0.89, false, false, 0.3));
 console.log(model.ignoreAllCalc(0.89, false, true, undefined));

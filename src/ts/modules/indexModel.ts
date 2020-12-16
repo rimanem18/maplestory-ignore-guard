@@ -108,7 +108,7 @@ export const rangeControl = (value: number, min: number, max: number): number =>
 /**
  * 強化コア分や想定反映をふくめた最終率無視を計算、配列にして返す
  * 
- * @param ignoreGuard 防御率
+ * @param ignoreGuard 防御率無視
  * @param coreUpgrade 強化コアのチェックボックス
  * @param damageReflect 想定反映するかどうか
  * @param addIgnoreIf 想定率無視
@@ -190,3 +190,4 @@ export const resetCookies = (cookiesList : { name: string, input: HTMLInputEleme
         Cookies.set(element.name, element.input.checked, { expires: 7 });
     });
 }
+
