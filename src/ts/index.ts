@@ -1,8 +1,7 @@
 "use strict";
 
-import { ignoreAllCalc } from "./modules/indexModel";
-
-const model = require('./modules/indexModel.ts');
+// import * as model from './modules/indexModel'
+const model = require('./modules/indexModel.ts')
 
 
 const viewDamage: HTMLElement = <HTMLElement>document.getElementById('js-damage');
