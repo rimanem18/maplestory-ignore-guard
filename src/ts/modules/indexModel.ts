@@ -59,7 +59,14 @@ export const pressureCalc = (pressure: HTMLInputElement, enhance: HTMLInputEleme
 }
 
 
-// 文字列の真偽値を boolean 型に変換
+
+
+/**
+ * 文字列の真偽値を boolean 型に変換
+ * 
+ * @param strBool 文字列の true / false
+ * @return true or false
+ */
 export const toBoolean = (strBool: string): boolean => {
     if (strBool === "true") {
         return true;
