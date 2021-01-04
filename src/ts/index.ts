@@ -78,8 +78,8 @@ const viewAll = (): void => {
 
     viewDamage.textContent = model.damageCalc(mobGuard, ignoreGuardAllVal, pressureResult).toString();
 
-    // 小数で取得後、切り上げしてパーセントに変換
-    ignoreGuardIf.textContent = Math.ceil(
+    // 小数で取得後、切り捨てしてパーセントに変換
+    ignoreGuardIf.textContent = Math.floor(
         (model.addIf(addIgnoreIfVal, ignoreGuardVal)) * 100)
         .toString();
 };

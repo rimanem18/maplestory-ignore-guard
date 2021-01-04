@@ -166,8 +166,8 @@ export const damageCalc = (mobGuard: number, ignoreGuardVal: number, pressureRes
         damage = 0;
     }
 
-    // 計算結果を返却
-    damage = Math.ceil(damage * 100);
+    // 計算結果を切り捨て返却
+    damage = Math.floor(damage * 100);
 
     return damage;
 }
