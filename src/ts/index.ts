@@ -93,36 +93,3 @@ elementList.forEach(element => {
 });
 
 viewAll();
-
-
-
-// tests
-console.log('/** tests **/');
-console.log('--- ignoreGuardCalc:');
-console.log(model.ignoreGuardCalc([0.3, 0.3, 0.3, 0.3, 0.3, 0.3]));
-console.log('--- addIf:');
-console.log(model.addIf(0.89, 0.30));
-console.log('--- pressureCalc:');
-console.log(model.pressureCalc(pressure, pressureEnhance, enhanceLabel));
-console.log('--- toBoolean:');
-console.log(model.toBoolean("true"));
-console.log(model.toBoolean("false"));
-console.log(model.toBoolean("abc"));
-console.log('--- getCookie:');
-console.log(model.getCookie('hoge', "100"));
-console.log(model.getCookie('ignore', "100"));
-console.log('--- rangeControl:');
-console.log(model.rangeControl(5, 0, 100));
-console.log(model.rangeControl(-5, 0, 100));
-console.log(model.rangeControl(150, 0, 100));
-console.log('--- ignoreAllCalc:');
-console.log(model.ignoreAllCalc(0.89, false, false, 0.3));
-console.log(model.ignoreAllCalc(0.89, false, true, undefined));
-console.log(model.ignoreAllCalc(0.89, true, true, 0.3));
-console.log(model.ignoreAllCalc(0.89, true, false, 0.3));
-console.log('--- damageCalc:');
-console.log(model.damageCalc(3, 0.89, 0.5));
-
-
-
-
